@@ -50,6 +50,44 @@
       font-weight:700;
       box-shadow:0 2px 8px rgba(255,189,57,0.12);
     }
+    
+    /* Navigation menu container */
+    .nav-menu {
+      display: flex;
+      align-items: center;
+    }
+    
+    /* Hamburger menu button */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      padding: 5px;
+      z-index: 1000;
+    }
+    
+    .nav-toggle span {
+      width: 25px;
+      height: 3px;
+      background: #ffbd39;
+      margin: 3px 0;
+      transition: 0.3s;
+      border-radius: 2px;
+    }
+    
+    /* Hamburger animation when active */
+    .nav-toggle.active span:nth-child(1) {
+      transform: rotate(-45deg) translate(-5px, 6px);
+    }
+    
+    .nav-toggle.active span:nth-child(2) {
+      opacity: 0;
+    }
+    
+    .nav-toggle.active span:nth-child(3) {
+      transform: rotate(45deg) translate(-5px, -6px);
+    }
+    
     .nav-brand {
       display:flex;
       align-items:center;
@@ -175,6 +213,61 @@
     .footer-social a:hover { color:#ff6b35; }
 
     @media (max-width:768px) {
+      .navbar { 
+        flex-direction: row; 
+        justify-content: space-between; 
+        padding: 0.7rem 1rem; 
+        border-radius: 0 0 12px 12px; 
+        position: relative;
+      }
+      
+      /* Show hamburger menu */
+      .nav-toggle {
+        display: flex;
+      }
+      
+      /* Hide navigation menu by default on mobile */
+      .nav-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(24,24,24,0.95);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        flex-direction: column;
+        align-items: stretch;
+        padding: 1rem 0;
+        border-radius: 0 0 12px 12px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+        transform: translateY(-100%);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 999;
+      }
+      
+      /* Show navigation menu when active */
+      .nav-menu.active {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+      }
+      
+      .nav-menu a {
+        display: block;
+        width: 100%;
+        text-align: center;
+        margin: 0.5rem 0;
+        padding: 0.8rem 1rem;
+        border-radius: 8px;
+        font-size: 1.1rem;
+      }
+      
+      .nav-menu a:hover {
+        background: rgba(255,189,57,0.1);
+      }
+      
       .about-container { padding:2rem 1rem; }
       .about-title { font-size:2.5rem; }
       .about-stats { gap:2rem; }
@@ -188,8 +281,8 @@
       .skills-grid, .education-grid, .values-grid, .interests-grid { grid-template-columns:1fr; }
     }
     @media (max-width:600px) {
-      .navbar { flex-direction:column; padding:0.7rem 0.5rem; border-radius:0 0 12px 12px; }
-      .nav-brand { margin-bottom:0.5rem; }
+      .navbar { flex-direction:row; padding:0.7rem 0.5rem; border-radius:0 0 12px 12px; }
+      .nav-brand { margin-bottom:0; }
       .navbar a { width:100%; text-align:center; margin:0.2rem 0; }
       .header-profile { width:150px; height:150px; }
       .about-title { font-size:2rem; }
@@ -208,9 +301,18 @@
       <img src="images/jatinmishra.jpg (2).jpg" alt="Jatin Mishra" class="nav-profile-img">
       <span class="brand">Jatin Mishra</span>
     </div>
-    <div>
+    
+    <!-- Mobile hamburger menu button -->
+    <div class="nav-toggle" id="navToggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    
+    <!-- Navigation menu -->
+    <div class="nav-menu" id="navMenu">
       <a href="index.html">Home</a>
-      <a href="about.html">About</a>
+      <a href="about.html" class="active">About</a>
       <a href="experience.html">Experience</a>
       <a href="projects.html">Projects</a>
       <a href="contact.html">Contact</a>
@@ -230,7 +332,7 @@
           <span class="stat-label">Months Experience</span>
         </div>
         <div class="stat-item">
-          <span class="stat-number">15+</span>
+          <span class="stat-number">6+</span>
           <span class="stat-label">Projects Completed</span>
         </div>
         <div class="stat-item">
@@ -593,5 +695,44 @@
       </div>
     </div>
   </footer>
+  
+  <script>
+    // Mobile Navigation Toggle
+    document.addEventListener('DOMContentLoaded', function() {
+      const navToggle = document.getElementById('navToggle');
+      const navMenu = document.getElementById('navMenu');
+      
+      // Toggle navigation menu
+      navToggle.addEventListener('click', function() {
+        navToggle.classList.toggle('active');
+        navMenu.classList.toggle('active');
+      });
+      
+      // Close menu when clicking on a navigation link
+      const navLinks = navMenu.querySelectorAll('a');
+      navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          navToggle.classList.remove('active');
+          navMenu.classList.remove('active');
+        });
+      });
+      
+      // Close menu when clicking outside
+      document.addEventListener('click', function(event) {
+        if (!navToggle.contains(event.target) && !navMenu.contains(event.target)) {
+          navToggle.classList.remove('active');
+          navMenu.classList.remove('active');
+        }
+      });
+      
+      // Close menu on window resize (if screen becomes larger)
+      window.addEventListener('resize', function() {
+        if (window.innerWidth > 768) {
+          navToggle.classList.remove('active');
+          navMenu.classList.remove('active');
+        }
+      });
+    });
+  </script>
 </body>
 </html> 
